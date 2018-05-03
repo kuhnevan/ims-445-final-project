@@ -45,8 +45,15 @@ function p1:nothingleft()
  if self.x % 8 != 0 then
   return true
  else
-  sprindex = mget((self.x / 8) - 1, self.y / 8)
-  return not fget(sprindex, 0)
+  sprindexHeadLevel = mget((self.x / 8) - 1, self.y / 8)
+   oneOrTwoBlocksBelow = 1
+  if self.y %8 != 0 then
+   oneOrTwoBlocksBelow = 2
+  end
+  sprindexFeetLevel = mget((self.x / 8) - 1, (self.y / 8) + oneOrTwoBlocksBelow)
+  clearHeadLevel = not fget(sprindexHeadLevel, 0)
+  clearFeetLevel = not fget(sprindexFeetLevel, 0)
+  return clearHeadLevel and clearFeetLevel
  end
 end
 
@@ -54,8 +61,15 @@ function p1:nothingright()
  if self.x % 8 != 0 then
   return true
  else
-  sprindex = mget((self.x / 8) + 1, self.y / 8)
-  return not fget(sprindex, 0)
+  sprindexHeadLevel = mget((self.x / 8) + 1, self.y / 8)
+  oneOrTwoBlocksBelow = 1
+  if self.y %8 != 0 then
+   oneOrTwoBlocksBelow = 2
+  end
+  sprindexFeetLevel = mget((self.x / 8) + 1, (self.y / 8) + oneOrTwoBlocksBelow)
+  clearHeadLevel = not fget(sprindexHeadLevel, 0)
+  clearFeetLevel = not fget(sprindexFeetLevel, 0)
+  return clearHeadLevel and clearFeetLevel
  end
 end
 
