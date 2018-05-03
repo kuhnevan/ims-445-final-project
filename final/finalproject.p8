@@ -6,66 +6,83 @@ y = 64
 
 z = 1
 
-cellWidth = 8
+cellwidth = 8
 
 p1 = {
-    x = 6 * cellWidth,
-    y = 7 * cellWidth,
-    sprIndex = 4,
+    x = 6 * cellwidth,
+    y = 7 * cellwidth,
+    sprindex = 4,
     width = 1,
-    height = 2
+    height = 2,
+    speed = 1
 }
 
-function p1:moveLeft()
- if p1:nothingLeft() then
-  self.x = self.x - cellWidth
+function p1:moveleft()
+ if p1:nothingleft() then
+  self.x = self.x - p1.speed
  end
 end
 
-function p1:moveRight()
- if p1:nothingRight() then
-  self.x = self.x + cellWidth
+function p1:moveright()
+ if p1:nothingright() then
+  self.x = self.x + p1.speed
  end
 end
 
-function p1:moveUp()
- if p1:nothingAbove() then
-  self.y = self.y - cellWidth
+function p1:moveup()
+ if p1:nothingabove() then
+  self.y = self.y - p1.speed
  end
 end
 
-function p1:moveDown()
- if p1:nothingBelow() then
-  self.y = self.y + cellWidth
+function p1:movedown()
+ if p1:nothingbelow() then
+  self.y = self.y + p1.speed
  end
 end
 
-function p1:nothingLeft()
- sprIndex = mget((self.x / 8) - 1, self.y / 8)
- return not fget(sprIndex, 0)
+function p1:nothingleft()
+ if self.x % 8 != 0 then
+  return true
+ else
+  sprindex = mget((self.x / 8) - 1, self.y / 8)
+  return not fget(sprindex, 0)
+ end
 end
 
-function p1:nothingRight()
- sprIndex = mget((self.x / 8) + 1, self.y / 8)
- return not fget(sprIndex, 0)
+function p1:nothingright()
+ if self.x % 8 != 0 then
+  return true
+ else
+  sprindex = mget((self.x / 8) + 1, self.y / 8)
+  return not fget(sprindex, 0)
+ end
 end
 
-function p1:nothingAbove()
- sprIndex = mget(self.x / 8, (self.y / 8) + 1)
- return not fget(sprIndex, 0)
+function p1:nothingabove()
+ if self.y % 8 != 0 then
+  return true
+ else
+  sprindex = mget(self.x / 8, (self.y / 8) - 1)
+  return not fget(sprindex, 0)
+ end
 end
 
-function p1:nothingBelow()
- sprIndex = mget(self.x / 8, (self.y / 8) + 2)
- return not fget(sprIndex, 0)
+function p1:nothingbelow()
+ if self.y % 8 != 0 then
+  return true
+ else
+  sprindex = mget(self.x / 8, (self.y / 8) + 2)
+  return not fget(sprindex, 0)
+ end
 end
 
 function _update()
- if (btnp(0)) then p1:moveLeft() end
- if (btnp(1)) then p1:moveRight() end
- if (btnp(2)) then p1:moveUp() end
- if (btnp(3)) then p1:moveDown() end
- if (btnp(4)) then z += 1 end
+ if (btn(0)) then p1:moveleft() end
+ if (btn(1)) then p1:moveright() end
+ if (btn(2)) then p1:moveup() end
+ if (btn(3)) then p1:movedown() end
+ if (btn(4)) then z += 1 end
 end
 
 
@@ -73,7 +90,7 @@ end
 function _draw()
  map(0,0,0,0,16,8)
  map(0,0,0,64,16,8)
- spr(p1.sprIndex, p1.x, p1.y, p1.width, p1.height)
+ spr(p1.sprindex, p1.x, p1.y, p1.width, p1.height)
 end
 
 
