@@ -45,15 +45,15 @@ function p1:nothingleft()
  if self.x % 8 != 0 then
   return true
  else
-  sprindexHeadLevel = mget((self.x / 8) - 1, self.y / 8)
-   oneOrTwoBlocksBelow = 1
-  if self.y %8 != 0 then
-   oneOrTwoBlocksBelow = 2
+  sprindexheadlevel = mget((self.x / 8) - 1, self.y / 8)
+   oneortwoblocksbelow = 1
+  if self.y %8 != 0 then -- if the upperbody is not completely on one and onely one cell
+   oneortwoblocksbelow = 2 -- go one cell lower to account for a partially filled cell
   end
-  sprindexFeetLevel = mget((self.x / 8) - 1, (self.y / 8) + oneOrTwoBlocksBelow)
-  clearHeadLevel = not fget(sprindexHeadLevel, 0)
-  clearFeetLevel = not fget(sprindexFeetLevel, 0)
-  return clearHeadLevel and clearFeetLevel
+  sprindexfeetlevel = mget((self.x / 8) - 1, (self.y / 8) + oneortwoblocksbelow)
+  clearheadlevel = not fget(sprindexheadlevel, 0) -- head and feet occupy two different cells
+  clearfeetlevel = not fget(sprindexfeetlevel, 0) -- check for both
+  return clearheadlevel and clearfeetlevel
  end
 end
 
@@ -61,15 +61,15 @@ function p1:nothingright()
  if self.x % 8 != 0 then
   return true
  else
-  sprindexHeadLevel = mget((self.x / 8) + 1, self.y / 8)
-  oneOrTwoBlocksBelow = 1
-  if self.y %8 != 0 then
-   oneOrTwoBlocksBelow = 2
+  sprindexheadlevel = mget((self.x / 8) + 1, self.y / 8)
+  oneortwoblocksbelow = 1
+  if self.y %8 != 0 then -- if the upperbody is not completely on one and onely one cell
+   oneortwoblocksbelow = 2 -- go one cell lower to account for a partially filled cell
   end
-  sprindexFeetLevel = mget((self.x / 8) + 1, (self.y / 8) + oneOrTwoBlocksBelow)
-  clearHeadLevel = not fget(sprindexHeadLevel, 0)
-  clearFeetLevel = not fget(sprindexFeetLevel, 0)
-  return clearHeadLevel and clearFeetLevel
+  sprindexfeetlevel = mget((self.x / 8) + 1, (self.y / 8) + oneortwoblocksbelow)
+  clearheadlevel = not fget(sprindexheadlevel, 0) -- head and feet occupy two different cells
+  clearfeetlevel = not fget(sprindexfeetlevel, 0) -- check for both
+  return clearheadlevel and clearfeetlevel
  end
 end
 
