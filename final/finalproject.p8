@@ -56,7 +56,7 @@ function p1:nothingAbove()
 end
 
 function p1:nothingBelow()
- sprIndex = mget(self.x / 8, (self.y / 8) + 1)
+ sprIndex = mget(self.x / 8, (self.y / 8) + 2)
  return not fget(sprIndex, 0)
 end
 
