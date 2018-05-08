@@ -17,10 +17,11 @@ p1 = {
     hasbat = false,
     damage = 0,
     health = 10,
-    sprindex = 9,
+    sprindex = 11,
     width = 2,
     height = 2,
-    speed = 1
+    speed = 1,
+    is_flipped = false
 }
 
 -- initializes the dog
@@ -31,8 +32,11 @@ dog = {
     sprindex = 7,
     width = 2,
     height = 2,
-    speed = 0
+    speed = 1,
+    is_flipped = false
 }
+
+actors = {p1, dog}
 
 -- when the player has hit an enemy, this function subtracts from that character's health
 function dealdamage(dam)
@@ -47,100 +51,110 @@ function attackanim()
     p1.sprindex = 43
     _draw()
     for i = 1, 10 do flip() end
-    p1.sprindex = 9
+    p1.sprindex = 11
     _draw()
 end
 
-function p1:moveleft()
- if p1:nothingleft() then
-  self.x = self.x - p1.speed
+function moveleft(actor)
+ if nothingleft(actor) then
+  actor.x = actor.x - actor.speed
+ end
+ actor.is_flipped = true
+end
+
+function moveright(actor)
+ if nothingright(actor) then
+  actor.x = actor.x + actor.speed
+ end
+ actor.is_flipped = false
+end
+
+function moveup(actor)
+ if nothingabove(actor) then
+  actor.y = actor.y - actor.speed
  end
 end
 
-function p1:moveright()
- if p1:nothingright() then
-  self.x = self.x + p1.speed
+function movedown(actor)
+ if nothingbelow(actor) then
+  actor.y = actor.y + p1.speed
  end
 end
 
-function p1:moveup()
- if p1:nothingabove() then
-  self.y = self.y - p1.speed
- end
-end
-
-function p1:movedown()
- if p1:nothingbelow() then
-  self.y = self.y + p1.speed
- end
-end
-
-function p1:nothingleft()
- if self.x % 8 != 0 then
+function nothingleft(actor)
+ if actor.x % 8 != 0 then
   return true
  else
-  sprindexheadlevel = mget((self.x / 8) - 1, self.y / 8)
+  sprindexheadlevel = mget((actor.x / 8) - 1, actor.y / 8)
    oneortwoblocksbelow = 1
-  if self.y %8 != 0 then -- if the upperbody is not completely on one and onely one cell
+  if actor.y %8 != 0 then -- if the upperbody is not completely on one and onely one cell
    oneortwoblocksbelow = 2 -- go one cell lower to account for a partially filled cell
   end
-  sprindexfeetlevel = mget((self.x / 8) - 1, (self.y / 8) + oneortwoblocksbelow)
+  sprindexfeetlevel = mget((actor.x / 8) - 1, (actor.y / 8) + oneortwoblocksbelow)
   clearheadlevel = not fget(sprindexheadlevel, 0) -- head and feet occupy two different cells
   clearfeetlevel = not fget(sprindexfeetlevel, 0) -- check for both
   return clearheadlevel and clearfeetlevel
  end
 end
 
-function p1:nothingright()
- if self.x % 8 != 0 then
+function nothingright(actor)
+ if actor.x % 8 != 0 then
   return true
  else
-  sprindexheadlevel = mget((self.x / 8) + 2, self.y / 8)
+  sprindexheadlevel = mget((actor.x / 8) + 2, actor.y / 8)
   oneortwoblocksbelow = 1
-  if self.y %8 != 0 then -- if the upperbody is not completely on one and onely one cell
+  if actor.y %8 != 0 then -- if the upperbody is not completely on one and onely one cell
    oneortwoblocksbelow = 2 -- go one cell lower to account for a partially filled cell
   end
-  sprindexfeetlevel = mget((self.x / 8) + 1, (self.y / 8) + oneortwoblocksbelow)
+  sprindexfeetlevel = mget((actor.x / 8) + 1, (actor.y / 8) + oneortwoblocksbelow)
   clearheadlevel = not fget(sprindexheadlevel, 0) -- head and feet occupy two different cells
   clearfeetlevel = not fget(sprindexfeetlevel, 0) -- check for both
   return clearheadlevel and clearfeetlevel
  end
 end
 
-function p1:nothingabove()
- if self.y % 8 != 0 then
+function nothingabove(actor)
+ if actor.y % 8 != 0 then
   return true
  else
-  sprindex = mget(self.x / 8, (self.y / 8) - 1)
+  sprindex = mget(actor.x / 8, (actor.y / 8) - 1)
   return not fget(sprindex, 0)
  end
 end
 
-function p1:nothingbelow()
- if self.y % 8 != 0 then
+function nothingbelow(actor)
+ if actor.y % 8 != 0 then
   return true
  else
-  sprindex = mget(self.x / 8, (self.y / 8) + 2)
+  sprindex = mget(actor.x / 8, (actor.y / 8) + 2)
   return not fget(sprindex, 0)
  end
+end
+
+function drawactors()
+    for actor in all(actors) do
+     spr(actor.sprindex, actor.x, actor.y, actor.width, actor.height, actor.is_flipped)
+    end
 end
 
 function _update()
- if (btn(0)) then p1:moveleft() end
- if (btn(1)) then p1:moveright() end
- if (btn(2)) then p1:moveup() end
- if (btn(3)) then p1:movedown() end
+ if (btn(0)) then moveleft(p1) end
+ if (btn(1)) then moveright(p1) end
+ if (btn(2)) then moveup(p1) end
+ if (btn(3)) then movedown(p1) end
  if (btnp(4)) then 
  	if (p1.sprindex == 11) then	attackanim() end
  end
+ moveright(dog)
 end
 
 
 
 function _draw()
  map(0,0,0,0,16,16)
- spr(p1.sprindex, p1.x, p1.y, p1.width, p1.height)
- spr(dog.sprindex, dog.x, dog.y, dog.width, dog.height)
+ --spr(p1.sprindex, p1.x, p1.y, p1.width, p1.height, p1.is_flipped)
+ --spr(dog.sprindex, dog.x, dog.y, dog.width, dog.height)
+ drawactors()
  
 end
 
