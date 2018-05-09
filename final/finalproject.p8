@@ -3,7 +3,7 @@ version 16
 __lua__
 x = 64
 y = 64
-level = 0
+level = 2
 mapwidth = 16
 mapheight = 16
 z = 1
@@ -26,6 +26,18 @@ p1 = {
     is_flipped = false
 }
 
+-- hallway 1 enemies ---------------------------------------------
+spider = {
+    x = 24 * cellwidth,
+    y = 4 * cellwidth,
+    health = 5,
+    sprindex = 5,
+    width = 2,
+    height = 2,
+    speed = .5,
+    is_flipped = false
+}
+
 -- initializes the dog
 dog = {
     x = 2 * cellwidth,
@@ -39,6 +51,9 @@ dog = {
 }
 
 actors = {p1, dog}
+
+
+
 
 -- when the player has hit an enemy, this function subtracts from that character's health
 function dealdamage(dam)
@@ -139,12 +154,17 @@ function drawactors()
     end
 end
 
-function drawmap(lvl)
-	if (lvl == 0) map(0 + lvl*mapwidth, 0 + lvl * mapheight,0 + lvl*mapwidth, 0 + lvl * mapheight,16,16)
+function drawmap()
+	map(level*mapwidth, 0, 0, 0,16,16)
 end 
-		
+
+function checkloc()
+ if (fget(mget(p1.x/8, p1.y /8) + 2, 3)) level+=1
+end
+
 
 function _update()
+ checkloc()
  if (btn(0)) then moveleft(p1) end
  if (btn(1)) then moveright(p1) end
  if (btn(2)) then moveup(p1) end
@@ -158,8 +178,8 @@ end
 
 
 function _draw()
- drawmap(level) 
- drawactors(level)
+ drawmap() 
+ drawactors()
 end
 
 
