@@ -12,10 +12,42 @@ time_t = 0
 
 cellwidth = 8
 
+-- The position where the player will start at each level
+roomstart = {}
+roomstart["x"] = 1 * cellwidth
+roomstart["y"] = 2 * cellwidth
+
+level1start = {}
+level1start["x"] = 24 * cellwidth
+level1start["y"] = 0 * cellwidth
+
+level2start = {}
+level2start["x"] = 32 * cellwidth
+level2start["y"] = 6 * cellwidth
+
+level3start = {}
+level3start["x"] = 48 * cellwidth
+level3start["y"] = 9 * cellwidth
+
+level4start = {}
+level4start["x"] = 65 * cellwidth
+level4start["y"] = 11 * cellwidth
+
+level5start = {}
+level5start["x"] = 95 * cellwidth
+level5start["y"] = 9 * cellwidth
+
+level6start = {}
+level6start["x"] = 102 * cellwidth
+level6start["y"] = 14 * cellwidth
+
+levelstarts = {roomstart, level1start, level2start, level3start, level4start, level5start,
+                level6start}
+
 -- initializes the player
 p1 = {
-    x = 6 * cellwidth,
-    y = 4 * cellwidth,
+    x = roomstart.x,
+    y = roomstart.y,
     hasbat = false,
     damage = 0,
     health = 10,
@@ -163,6 +195,19 @@ function checkloc()
  if (fget(mget(p1.x/8, p1.y /8) + 2, 3)) level+=1
 end
 
+function changearea() -- Changes the area when the player steps on the pink mat
+ sprindexfeetlevel = mget(p1.x / 8, (p1.y / 8) + 1)
+ if sprindexfeetlevel == 51 then
+  if level < 6 then
+   level += 1
+  else
+   level = 0 -- level zero is the bedroom
+  end
+  p1.x = levelstarts[level + 1].x -- +1 offset because lua starts indexes at 1
+  p1.y = levelstarts[level + 1].y -- +1 offset because lua starts indexes at 1
+ end
+end
+
 
 function _update()
  checkloc()
@@ -171,10 +216,11 @@ function _update()
  if (btn(2)) then moveup(p1) end
  if (btn(3)) then movedown(p1) end
  if (btnp(4)) then 
-    if (level <= 5) then level+=1
-    else level = 0 end
+   -- if (level <= 5) then level+=1
+   -- else level = 0 end
  	if (p1.sprindex == 11) then	attackanim() end
  end
+ changearea()
  moveright(dog)
 end
 
