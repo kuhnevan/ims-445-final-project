@@ -111,7 +111,7 @@ function interact()
   dogtalk()
  elseif abs(p1.x - 10) < 10 and abs(p1.y - 10) < 10 then
   p1.sprindex = 11
- elseif abs(p1.x - (74 * cellwidth)) < 20 and abs(p1.y - (2 * cellwidth)) < 20 then
+ elseif abs(p1.x - (74 * cellwidth)) < 10 and abs(p1.y - (2 * cellwidth)) < 10 then
   p1talk()
  end
 end
@@ -139,7 +139,7 @@ function p1talk()
  notext = ""
  text1 = "The milk!"
  text2 = "*Gulp Gulp Gulp*"
- text3 = "Well, I better get back to bed"
+ text3 = "Well, I better\nget back to bed"
  if p1.speechbubble == notext then
   p1.speechbubble = text1
  elseif p1.speechbubble == text1 then
@@ -300,7 +300,7 @@ function gamedraw()
  movecam() 
  drawactors()
  print(dog.speechbubble, 0, 80)
- print(p1.speechbubble, 0, 80)
+ print(p1.speechbubble, p1.x - 50, 40)
 end
 
 function _draw()
