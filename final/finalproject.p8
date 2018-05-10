@@ -1,26 +1,27 @@
 pico-8 cartridge // http://www.pico-8.com
 version 16
 __lua__
-sfx(2)
 -- global variables
-mode = 0
-
-level = 0
-mapwidth = 16
-mapheight = 16
-z = 1
-
-time_t = 0
-
-cellwidth = 8
-
-player = 0
-dogtype = 1
-spidertype = 2
-rattype = 3
 -----------------------------------------------
 
--- the starting position of the player for each level
+
+-----------------------------------------------
+
+
+-----------------------------------------------
+--Initializer
+function _init()
+ sfx(2)
+ mode = 0
+ level = 0
+ mapwidth = 16
+ mapheight = 16
+ z = 1
+ time_t = 0
+ cellwidth = 8
+ screentext = ""
+ textcolor = 7
+ -- the starting position of the player for each level
 roomstart = {}
 roomstart["x"] = 1 * cellwidth
 roomstart["y"] = 2 * cellwidth
@@ -51,8 +52,7 @@ level6start["y"] = 14 * cellwidth
 
 levelstarts = {roomstart, level1start, level2start, level3start, level4start, level5start,
                 level6start}
------------------------------------------------
--- actor initializations
+ -- actor initializations
 
 -- initializes the player
 p1 = {
@@ -72,7 +72,6 @@ p1 = {
     gotmilk = false
 }
 
--- hallway 1 enemies ---------------------------------------------
 spider1 = {
     x = 24 * cellwidth,
     y = 4 * cellwidth,
@@ -80,13 +79,12 @@ spider1 = {
     health = 3,
     sprindex = 5,
     width = 2,
-    height = 2,
+    height = 1,
     speed = .3,
     is_flipped = false,
     level = 1, -- the level that the enemy appears in
     isenemy = true
 }
-
 -- initializes the dog
 dog = {
     x = 2 * cellwidth,
@@ -117,7 +115,92 @@ rat1 = {
     isenemy = true
 }
 
-actors = {p1, dog, spider1, rat1}
+rat2 = {
+    x = 45 * cellwidth,
+    y = 7 * cellwidth,
+    isalive = true,
+    health = 1,
+    sprindex = 2,
+    width = 2,
+    height = 1,
+    speed = 0.7,
+    is_flipped = false,
+    level = 2, -- the level that the enemy appears in
+    isenemy = true
+}
+
+rat3 = {
+    x = 45 * cellwidth,
+    y = 8 * cellwidth,
+    isalive = true,
+    health = 1,
+    sprindex = 2,
+    width = 2,
+    height = 1,
+    speed = 0.5,
+    is_flipped = false,
+    level = 2, -- the level that the enemy appears in
+    isenemy = true
+}
+
+spider2 = {
+    x = 62 * cellwidth,
+    y = 14 * cellwidth,
+    isalive = true,
+    health = 3,
+    sprindex = 5,
+    width = 2,
+    height = 1,
+    speed = .3,
+    is_flipped = false,
+    level = 3, -- the level that the enemy appears in
+    isenemy = true
+}
+
+spider3 = {
+    x = 62 * cellwidth,
+    y = 13 * cellwidth,
+    isalive = true,
+    health = 3,
+    sprindex = 5,
+    width = 2,
+    height = 1,
+    speed = .5,
+    is_flipped = false,
+    level = 3, -- the level that the enemy appears in
+    isenemy = true
+}
+
+rat4 = {
+    x = 59 * cellwidth,
+    y = 14 * cellwidth,
+    isalive = true,
+    health = 3,
+    sprindex = 2,
+    width = 2,
+    height = 1,
+    speed = .5,
+    is_flipped = false,
+    level = 3, -- the level that the enemy appears in
+    isenemy = true
+}
+
+rat5 = {
+    x = 59 * cellwidth,
+    y = 13 * cellwidth,
+    isalive = true,
+    health = 3,
+    sprindex = 2,
+    width = 2,
+    height = 1,
+    speed = .5,
+    is_flipped = false,
+    level = 3, -- the level that the enemy appears in
+    isenemy = true
+}
+
+actors = {p1, dog, spider1, rat1, rat2, rat3, spider2, spider3, rat4, rat5}
+end 
 -----------------------------------------------
 -- functions
 
@@ -157,7 +240,7 @@ function interact()
   dogtalk()
  elseif abs(p1.x - 10) < 10 and abs(p1.y - 10) < 10 then
   if p1.gotmilk then
-   mode = 3
+   playerwins()
   else
    p1.sprindex = 11
   end
@@ -214,6 +297,15 @@ end
 
 function playerdies()
  p1.sprindex = 74
+ _draw()
+ mode = 2
+ screentext = "Milk run - FAILED"
+ textcolor = 8
+end
+
+function playerwins()
+ screentext = "Milk run - SUCCESS"
+ mode = 2
 end
 
 function checkenemycollsion(actor)
@@ -399,30 +491,45 @@ function gameupdate()
  move_enemy()
 end
 
+function endgameupdate()
+ if (btnp(4)) then
+  _init()
+ end
+end
+
 function _update()
  if mode == 0 then
   titleupdate()
  elseif mode == 1 then
   gameupdate()
+ else
+  endgameupdate()
  end
 end
 
 function titledraw()
+ -- camera(0, 56 * cellwidth)
  map(0, 56, 20, 0, 8, 8)
 end
 
 function gamedraw()
  movecam() 
  drawactors()
- print(dog.speechbubble, 0, 80)
- print(p1.speechbubble, p1.x - 50, 40)
+ print(dog.speechbubble, 0, 80, 7)
+ print(p1.speechbubble, p1.x - 50, 40, 7)
+end
+
+function endgamedraw()
+ print(screentext, level * 128, 10, textcolor)
 end
 
 function _draw()
  if mode == 0 then
   titledraw()
- else
+ elseif mode == 1 then
   gamedraw()
+ else
+  endgamedraw()
  end
 end
 
