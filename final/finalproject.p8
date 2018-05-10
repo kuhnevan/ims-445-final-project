@@ -73,7 +73,7 @@ p1 = {
 }
 
 -- hallway 1 enemies ---------------------------------------------
-spider = {
+spider1 = {
     x = 24 * cellwidth,
     y = 4 * cellwidth,
     isalive = true,
@@ -103,7 +103,21 @@ dog = {
     speechbubble = ""
 }
 
-actors = {p1, dog, spider}
+rat1 = {
+    x = 45 * cellwidth,
+    y = 6 * cellwidth,
+    isalive = true,
+    health = 1,
+    sprindex = 2,
+    width = 2,
+    height = 1,
+    speed = 1,
+    is_flipped = false,
+    level = 2, -- the level that the enemy appears in
+    isenemy = true
+}
+
+actors = {p1, dog, spider1, rat1}
 -----------------------------------------------
 -- functions
 
@@ -246,14 +260,22 @@ function moveleft(actor)
  if nothingleft(actor) then
   actor.x = actor.x - actor.speed
  end
- actor.is_flipped = true
+ if actor.isenemy then
+  actor.is_flipped = false
+ else
+  actor.is_flipped = true
+ end
 end
 
 function moveright(actor)
  if nothingright(actor) then
   actor.x = actor.x + actor.speed
  end
- actor.is_flipped = false
+ if actor.isenemy then
+  actor.is_flipped = true
+ else
+  actor.is_flipped = false
+ end
 end
 
 function moveup(actor)
@@ -571,6 +593,7 @@ __sfx__
 0101041c10850000000000000000000002c05000000000002d0502f05032060320603405036060370503905039050330502c050280502805028050260503a0503b0503a050390500000000000000000000000000
 01110000108501c8501c8500f85000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000000
 010600140084315903179031890324e13189030ce130a903008430a903089030890324e130a9030ce130a903008430a9030a9030000324e13000030ce13000030084300003000030000324e13000030ce1300003
+01100018200531b0002400000000220500000000000000002305000000000000000024050000000000000000280500000000000000001c0500000000000000001905000000000000000029050000000000000000
 __music__
 03 01024344
 
